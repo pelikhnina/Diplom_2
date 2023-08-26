@@ -2,7 +2,7 @@ package org.example.user;
 
 import java.util.Random;
 
-public class UserGenerator{
+public class UserGenerator {
     private static Random random = new Random();
 
     private static String generateRandomString(int length) {

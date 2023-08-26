@@ -1,33 +1,40 @@
 package org.example.user;
 
 import io.qameta.allure.Step;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import org.example.BaseService;
 
-import static io.restassured.RestAssured.given;
-
-public class AuthService {
-    static {
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
-        RestAssured.basePath = "/api/auth";
-        RestAssured.requestSpecification = given()
-                .contentType(ContentType.JSON)  // Выставляем contentType по умолчанию
-                .accept(ContentType.JSON);      // Устанавливаем accept заголовок по умолчанию
-    }
+public class AuthService extends BaseService {
     @Step
     public ValidatableResponse createUser(User user) {
-        return given()
+        return spec()
                 .body(user)
-                .post("/register")
+                .post("/auth/register")
                 .then();
     }
 
     @Step
     public ValidatableResponse loginUser(User user) {
-        return given()
+        return spec()
                 .body(user)
-                .post("/login")
+                .post("/auth/login")
+                .then();
+    }
+
+    @Step
+    public ValidatableResponse updateUser(User user, String token) {
+        return spec()
+                .header("Authorization", "Bearer" + token)
+                .body(user)
+                .patch("/auth/user")
+                .then();
+    }
+
+    @Step
+    public ValidatableResponse deleteUser(String token) {
+        return spec()
+                .header("Authorization", "Bearer" + token)
+                .delete("/auth/user")
                 .then();
     }
 }
