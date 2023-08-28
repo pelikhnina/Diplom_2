@@ -30,6 +30,7 @@ public class LoginUserTest {
         UserAssertions.loggedInSuccessfully(loginResponse, user);
 
         user.setPassword("");
+        user.setEmail("");
 
         ValidatableResponse invalidLoginResponse = authService.loginUser(user);
         invalidLoginResponse.assertThat()

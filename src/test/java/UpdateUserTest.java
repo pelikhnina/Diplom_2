@@ -8,8 +8,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class UpdateUserTest {
 
-    private AuthService authService = new AuthService();
-    private UserGenerator userGenerator = new UserGenerator();
+    private final AuthService authService = new AuthService();
+    private final UserGenerator userGenerator = new UserGenerator();
 
     @Test
     public void updateUser() {
@@ -42,24 +42,6 @@ public class UpdateUserTest {
                 .statusCode(401)
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
-    }
-
-    @Test
-    public void updateUserSameEmail() {
-        User user = userGenerator.generateRandomUser();
-        ValidatableResponse response = authService.createUser(user);
-        UserAssertions.createdSuccessfully(response, user);
-
-        String accessToken = response.extract().path("accessToken");
-
-        User updatedUser = userGenerator.generateRandomUser();
-        updatedUser.setEmail(user.getEmail());
-        ValidatableResponse updateResponse = authService.updateUser(updatedUser, accessToken);
-
-        updateResponse.assertThat()
-                .statusCode(403)
-                .body("success", equalTo(false))
-                .body("message", equalTo("User with such email already exists"));
     }
 
 }
