@@ -3,13 +3,19 @@ import org.example.user.AuthService;
 import org.example.user.User;
 import org.example.user.UserAssertions;
 import org.example.user.UserGenerator;
+import org.junit.After;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 
 public class UpdateUserTest {
 
     private final AuthService authService = new AuthService();
     private final UserGenerator userGenerator = new UserGenerator();
+    private final List<String> accessTokens = new ArrayList<>();
 
     @Test
     public void updateUser() {
@@ -43,5 +49,11 @@ public class UpdateUserTest {
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
     }
-
+    @After
+    public void tearDown() {
+        for (String accessToken : accessTokens) {
+            authService.deleteUser(accessToken);
+        }
+        accessTokens.clear();
+    }
 }

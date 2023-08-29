@@ -9,13 +9,13 @@ import org.example.user.AuthService;
 import org.example.user.User;
 import org.example.user.UserAssertions;
 import org.example.user.UserGenerator;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.*;
 
 public class OrdersListTest {
@@ -84,5 +84,12 @@ public class OrdersListTest {
                 .body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
 
+    }
+    @After
+    public void tearDown() {
+        for (String accessToken : accessTokens) {
+            authService.deleteUser(accessToken);
+        }
+        accessTokens.clear();
     }
 }
